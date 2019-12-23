@@ -20,6 +20,13 @@ public abstract class SwerveDrivetrain extends HolonomicDrivetrain {
 
     private InterpolatingTreeMap<InterpolatingDouble, Vector2> positionSamples = new InterpolatingTreeMap<>(5);
 
+    /**
+     * Moves the drivetrain as directed
+     *
+     * @param translation the translational velocity requested
+     * @param rotation the rotational velocity requested
+     * @param fieldOriented whether to use robot XY or field XY
+     */
     public void holonomicDrive(Vector2 translation, double rotation, boolean fieldOriented) {
         if (fieldOriented) {
             translation = translation.rotateBy(getGyroscope().getAngle().inverse());
@@ -34,11 +41,19 @@ public abstract class SwerveDrivetrain extends HolonomicDrivetrain {
 
     public abstract SwerveModule[] getSwerveModules();
 
+    /**
+     * Stops drivetrain movement
+     */
     @Override
     public void stop() {
         holonomicDrive(Vector2.ZERO, 0);
     }
 
+    /**
+     * Updates state and output of the drivetrain
+     *
+     * @param timestamp current timestamp
+     */
     @Override
     public synchronized void updateKinematics(double timestamp) {
         double robotRotation = getGyroscope().getAngle().toRadians();
@@ -83,6 +98,12 @@ public abstract class SwerveDrivetrain extends HolonomicDrivetrain {
         resetKinematics(Vector2.ZERO, timestamp);
     }
 
+    /**
+     * Resets position to given location
+     *
+     * @param position position of center of drivetrain
+     * @param timestamp current time
+     */
     public synchronized void resetKinematics(Vector2 position, double timestamp) {
         for (SwerveModule module : getSwerveModules()) {
             module.resetKinematics(position.add(module.getModulePosition()));

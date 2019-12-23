@@ -13,6 +13,7 @@ public final class SubsystemManager {
 
 	private double lastTimestamp = 0.0;
 
+	// Notifier that keeps updating kinematics of all subsystems
 	private final Notifier kinematicThread = new Notifier(() -> {
 		synchronized (SubsystemManager.this) {
 			final double timestamp = Timer.getFPGATimestamp();
@@ -31,6 +32,9 @@ public final class SubsystemManager {
 		this.subsystems.addAll(subsystems);
 	}
 
+	/**
+     * Start updating kinematics
+     */
 	public void enableKinematicLoop(double period) {
 		final double timestamp = Timer.getFPGATimestamp();
 		for (Subsystem subsystem : subsystems) {
